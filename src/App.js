@@ -12,6 +12,7 @@ function debounce(func, timeout = 500){
 }
 
 let toastMessage = '';
+let severity='success';
 function App() {
   const [message, setMessage] = useState('');
   const [open, setOpen] = useState(false);
@@ -24,12 +25,17 @@ function App() {
 
   const save = e => {
     saveMessage(message).then(res => {
-      console.log(res);
       if(res.status === 200) {
         toastMessage = 'Save successful';
+        severity='success';
       } else {
         toastMessage="Couldn't save";
+        severity='error';
       }
+      openToast();
+    }).catch(e => {
+      toastMessage=e.message;
+      severity="error";
       openToast();
     })
   }
@@ -78,7 +84,7 @@ function App() {
           </section>
       </section>
       <Snackbar open={open} autoHideDuration={5000} onClose={handleClose} anchorOrigin={{vertical: 'bottom', horizontal: 'center'}}>
-        <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
+        <Alert onClose={handleClose} severity={severity} sx={{ width: '100%' }}>
          {toastMessage}
         </Alert>
       </Snackbar>
