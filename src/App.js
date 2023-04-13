@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Button, TextField}  from '@mui/material';
+import { Button, TextField, Snackbar, Alert}  from '@mui/material';
 import { getMessage, saveMessage} from './services/message.service';
 import './App.css';
 
@@ -11,9 +11,10 @@ function debounce(func, timeout = 500){
   };
 }
 
-
+let toastMessage = '';
 function App() {
   const [message, setMessage] = useState('');
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     getMessage().then(res => {
@@ -24,16 +25,36 @@ function App() {
   const save = e => {
     saveMessage(message).then(res => {
       console.log(res);
+      if(res.status === 200) {
+        toastMessage = 'Save successful';
+      } else {
+        toastMessage="Couldn't save";
+      }
+      openToast();
     })
   }
 
   const clear= () => {
     setMessage('');
+    //save();
   }
 
   const messageChanged = e => {
     setMessage(e.target.value);
   }
+
+  const openToast = () => {
+    setOpen(true);
+  };
+
+  const handleClose = (event, reason) => {
+      if (reason === 'clickaway') {
+        return;
+      }
+
+      setOpen(false);
+  };
+
 
 
   return (
@@ -56,6 +77,11 @@ function App() {
                 <Button variant='contained' className='save-btn' onClick={save}>Save</Button>
           </section>
       </section>
+      <Snackbar open={open} autoHideDuration={5000} onClose={handleClose} anchorOrigin={{vertical: 'bottom', horizontal: 'center'}}>
+        <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
+         {toastMessage}
+        </Alert>
+      </Snackbar>
    </section>
   )
 }
