@@ -1,0 +1,37 @@
+.App {
+  text-align: center;
+
+}
+
+.message-ctr {
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  align-items: center;
+  margin-top: 50px;
+}
+
+.message-field-ctr {
+  width: 60%;
+  display: flex;
+  justify-content: center;
+}
+
+.message-btn-ctr {
+  width: 60%;
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 15px;
+}
+
+.save-btn {
+      background-color: #388e3c !important;
+      width: 150px;
+}
+
+.clear-btn {
+  color: #d32f2f !important;
+  border-color: #d32f2f !important;
+  width: 150px;
+  margin-right: 20px !important;
+}
