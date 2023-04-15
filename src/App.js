@@ -28,6 +28,7 @@ function App() {
     if(serverUp) {
       getMessage().then(res => {
          setMessage(res.data.message);
+         if(clearPollTimer) clearInterval(clearPollTimer);
       })
     }
   }, [serverUp])
