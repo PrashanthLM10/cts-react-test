@@ -8,3 +8,7 @@ export const  saveMessage = msg => {
     const postData = {message: msg};
     return axios.post('https://cts-node-test.onrender.com/message/setMessage', postData);
 }
+
+export const checkServerStatus = () => {
+    return axios.get('https://cts-node-test.onrender.com/');
+}

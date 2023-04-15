@@ -3,6 +3,12 @@
 
 }
 
+.top-bar {
+  margin-top: 20px;
+  display: flex;
+   justify-content: center;
+}
+
 .message-ctr {
   display: flex;
   flex-flow: column;
