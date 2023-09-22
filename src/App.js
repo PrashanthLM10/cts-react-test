@@ -105,11 +105,13 @@ function App() {
   const getTime = time => {
     const month = new Date(time).getMonth();
     const date = new Date(time).getDate();
-    const hours = new Date(time).getHours() > 12 ? new Date(time).getHours() - 12 : new Date(time).getHours();
+    const timeHours = new Date(time).getHours();
+    const hours = timeHours > 12 ? timeHours - 12 : timeHours;
     const minutes = new Date(time).getMinutes();
     const seconds = new Date(time).getSeconds();
+    const meridian = timeHours > 12 ? 'PM' : 'AM'
 
-    return `${date}/${month} ${hours}:${minutes}:${seconds}`
+    return `${date}/${month} ${hours}:${minutes}:${seconds} ${meridian}`
   }
 
 
