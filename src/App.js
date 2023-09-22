@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import { Button, TextField, Snackbar, Alert}  from '@mui/material';
+import { Button, TextField, Snackbar, Alert, Tooltip}  from '@mui/material';
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import { getMessage, saveMessage, checkServerStatus} from './services/message.service';
 import './App.css';
 
@@ -20,14 +21,18 @@ const alertErrorMessage = `Server down. When accessed for the first time after b
 Please wait and DONT reload if the server is not up for more than 5 minutes...`;
 function App() {
   const [message, setMessage] = useState('');
+  const [messageTime, setMessageTime] = useState('');
+  const [prevMessageObj, setPrevMessage] = useState('');
   const [open, setOpen] = useState(false);
   //const [showAlert, setShowAlert] = useState(false);
-  const [serverUp, setServerUp] = useState('');
+  const [serverUp, setServerUp] = useState(false);
 
   useEffect(() => {
     if(serverUp) {
       getMessage().then(res => {
          setMessage(res.data.message);
+         setMessageTime(res.data.time);
+         setPrevMessage({message: res.data.previousMessage, time: res.data.previousMessageTime});
          if(clearPollTimer) clearInterval(clearPollTimer);
       })
     }
@@ -97,15 +102,38 @@ function App() {
       setOpen(false);
   };
 
+  const getTime = time => {
+    const month = new Date(time).getMonth();
+    const date = new Date(time).getDate();
+    const hours = new Date(time).getHours() > 12 ? new Date(time).getHours() - 12 : new Date(time).getHours();
+    const minutes = new Date(time).getMinutes();
+    const seconds = new Date(time).getSeconds();
+
+    return `${date}/${month} ${hours}:${minutes}:${seconds}`
+  }
+
 
 
   return (
    <section className='app-ctr'>
     <section className='top-bar'>
-      {serverUp !== '' && <Alert sx={{width: '55%'}} severity={serverUp ? 'success' : 'error'}>{serverUp ? alertSuccessMessage :  alertErrorMessage}</Alert>}
+      {serverUp !== '' && <Alert sx={{width: '55%'}} severity={serverUp ? 'success' : 'info'}>{serverUp ? alertSuccessMessage :  alertErrorMessage}</Alert>}
+    </section>
+    <section className='previous-message-ctr'>
+      <section className='previous-message-header-ctr'>
+        {prevMessageObj.message && <p>Previous Message:</p>}
+        <span style={{display: 'flex'}}>
+          <Tooltip title="8919368035" placement="left" arrow>
+            <InfoOutlinedIcon />
+          </Tooltip>
+        {prevMessageObj.time && <span class="message-time-ctr">{getTime(prevMessageObj.time)}</span>}
+        </span>
+      </section>
+      {prevMessageObj.message && <section className='previous-message-content-ctr'>{prevMessageObj.message}</section>}
     </section>
       <section className='message-ctr'>
           <section className='message-field-ctr'>
+            {messageTime && <span class="message-time-ctr">Date Time: {getTime(messageTime)}</span>}
               <TextField
                    multiline
                    rows={10}
