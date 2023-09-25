@@ -6,7 +6,8 @@
 .top-bar {
   margin-top: 20px;
   display: flex;
-   justify-content: center;
+  justify-content: center;
+  max-height: 150px;
 }
 
 .message-ctr {
@@ -37,16 +38,22 @@
   margin-top: 15px;
 }
 
+.footer-btn {
+  margin-left: 20px !important;
+  text-transform: none !important;
+}
+
+.footer-btn > span{
+  margin-left: 10px;
+}
+
 .save-btn {
       background-color: #388e3c !important;
-      width: 150px;
 }
 
 .clear-btn {
   color: #d32f2f !important;
   border-color: #d32f2f !important;
-  width: 150px;
-  margin-right: 20px !important;
 }
 
 .previous-message-ctr {
@@ -60,10 +67,18 @@
 
 .previous-message-header-ctr {
   display: flex;
+  flex-flow: row wrap;
   justify-content: space-between;
   width: 60%;
   align-items: center;
   font-size: 13px;
+  border-bottom: 1px solid #d9d8d8;
+  margin-bottom: 10px;
+}
+
+.previous-message-label {
+  width: 200px;
+  margin: 0;
 }
 
 .previous-message-content-ctr {
@@ -74,4 +89,21 @@
   color: gray;
   font-size: 15px;
   margin-right: 10px;
+}
+
+@media (max-width: 500px){
+
+  .footer-btn > span{
+    display: none;
+  } 
+
+  .footer-btn {
+    min-width: 35px !important;
+    width: auto;
+    margin-left: 0 !important;
+  }
+
+  .message-btn-ctr {
+    justify-content: space-between;
+  }
 }
