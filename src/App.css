@@ -91,6 +91,36 @@
   margin-right: 10px;
 }
 
+.backdrop-ctr {
+  display: flex;
+  flex-flow: column;
+}
+
+.loader-text {
+  color: #fff;
+  margin-top: 25px;
+}
+
+/*
+  Altering material ui component font
+*/
+
+.message-field-ctr .MuiInputBase-input {
+  font-family: 'Montserrat', sans-serif;
+}
+
+.message-field-ctr .MuiInputLabel-root {
+  font-family: 'Montserrat', sans-serif;
+}
+
+.meesage-btn-ctr .MuiButtonBase-root {
+  font-family: 'Montserrat', sans-serif;
+}
+
+.MuiPaper-root {
+  font-family: 'Montserrat', sans-serif !important;  
+}
+
 @media (max-width: 500px){
 
   .footer-btn > span{

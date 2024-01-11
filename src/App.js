@@ -35,7 +35,7 @@ function App() {
   useEffect(() => {
     if (serverUp) {
       getLatestMessage();
-      
+
       if (clearPollTimer) {
         clearInterval(clearPollTimer);
       }
@@ -132,8 +132,10 @@ function App() {
     <Backdrop
       sx={{ color: '#fff', zIndex: 999 }}
       open={showLoader}
+      className='backdrop-ctr'
     >
       <CircularProgress color='inherit' size={80} />
+      <span className='loader-text'> Fetching Messages...</span>
     </Backdrop>
   );
 
