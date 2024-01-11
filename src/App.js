@@ -35,6 +35,10 @@ function App() {
   useEffect(() => {
     if (serverUp) {
       getLatestMessage();
+      
+      if (clearPollTimer) {
+        clearInterval(clearPollTimer);
+      }
     }
   }, [serverUp])
 
@@ -124,16 +128,18 @@ function App() {
     return new Date(time).toLocaleString();
   }
 
+  const Loader = (
+    <Backdrop
+      sx={{ color: '#fff', zIndex: 999 }}
+      open={showLoader}
+    >
+      <CircularProgress color='inherit' size={80} />
+    </Backdrop>
+  );
+
   return (
     <section className='app-ctr'>
-      {showLoader && (
-        <Backdrop
-          sx={{ color: '#fff', zIndex: 999 }}
-          open={showLoader}
-        >
-          <CircularProgress color='info' size={80} />
-        </Backdrop>
-      )}
+      {showLoader && Loader}
       <section className='top-bar'>
         {serverUp !== '' && <Alert sx={{ width: '55%' }} severity={serverUp ? 'success' : 'info'}>{serverUp ? alertSuccessMessage : alertErrorMessage}</Alert>}
       </section>
