@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Button, TextField, Snackbar, Alert, Tooltip } from '@mui/material';
+import { Button, TextField, Snackbar, Alert, Tooltip, CircularProgress, Backdrop } from '@mui/material';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import DoneRoundedIcon from '@mui/icons-material/DoneRounded';
 import ClearRoundedIcon from '@mui/icons-material/ClearRounded';
@@ -28,6 +28,7 @@ function App() {
   const [messageTime, setMessageTime] = useState('');
   const [prevMessageObj, setPrevMessage] = useState('');
   const [open, setOpen] = useState(false);
+  const [showLoader, setShowLoader] = useState(false);
   //const [showAlert, setShowAlert] = useState(false);
   const [serverUp, setServerUp] = useState(false);
 
@@ -54,6 +55,7 @@ function App() {
   }, [])
 
   const checkServer = () => {
+    !showLoader && setShowLoader(true);
     checkServerStatus().then(res => {
       if (res.status === 200 && res.data === 'working') {
         if (!serverUp) setServerUp(true);
@@ -64,11 +66,18 @@ function App() {
   }
 
   const getLatestMessage = () => {
+    !showLoader && setShowLoader(true);
     getMessage().then(res => {
       setMessage(res.data.message);
       setMessageTime(res.data.time);
       setPrevMessage({ message: res.data.previousMessage, time: res.data.previousMessageTime });
       if (clearPollTimer) clearInterval(clearPollTimer);
+      setShowLoader(false);
+    }).catch(e => {
+      setShowLoader(false);
+      toastMessage = e.message || 'Failed to fetch messages.';
+      severity = "error";
+      openToast();
     })
   }
 
@@ -82,6 +91,7 @@ function App() {
         severity = 'error';
       }
       openToast();
+      getLatestMessage();
     }).catch(e => {
       toastMessage = e.message;
       severity = "error";
@@ -111,21 +121,19 @@ function App() {
   };
 
   const getTime = time => {
-    const month = new Date(time).getMonth();
-    const date = new Date(time).getDate();
-    const timeHours = new Date(time).getHours();
-    const hours = timeHours > 12 ? timeHours - 12 : timeHours;
-    const minutes = new Date(time).getMinutes();
-    const seconds = new Date(time).getSeconds();
-    const meridian = timeHours > 12 ? 'PM' : 'AM'
-
-    return `${date}/${month} ${hours}:${minutes}:${seconds} ${meridian}`
+    return new Date(time).toLocaleString();
   }
-
-
 
   return (
     <section className='app-ctr'>
+      {showLoader && (
+        <Backdrop
+          sx={{ color: '#fff', zIndex: 999 }}
+          open={showLoader}
+        >
+          <CircularProgress color='info' size={80} />
+        </Backdrop>
+      )}
       <section className='top-bar'>
         {serverUp !== '' && <Alert sx={{ width: '55%' }} severity={serverUp ? 'success' : 'info'}>{serverUp ? alertSuccessMessage : alertErrorMessage}</Alert>}
       </section>
