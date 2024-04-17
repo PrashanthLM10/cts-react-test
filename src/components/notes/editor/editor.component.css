@@ -5,3 +5,10 @@
 .editor .ck.ck-content.ck-editor__editable, .editor .ck.ck-reset.ck-editor, .editor .ck.ck-editor__main {
     height: 100%;
 }
+
+.save-note-btn {
+    margin-top: 20px !important;
+    float: right;
+    text-transform: none !important;
+    background-color: #388e3c !important;
+}
