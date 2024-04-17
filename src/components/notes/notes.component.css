@@ -1,0 +1,22 @@
+.notes-ctr {
+
+}
+
+.notes-top-bar {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    color: #b1afaf;
+    align-items: center;
+    font-size: x-large;
+    font-weight: 900;
+}
+
+.MuiPaper-root.MuiAppBar-root {
+    box-shadow: none;
+    background: white;
+}
+
+.note-title {
+    padding-left: 3%;
+}

@@ -1,0 +1,173 @@
+.App {
+    text-align: center;
+  
+  }
+  
+  .top-bar {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    max-height: 150px;
+  }
+  
+  .message-ctr {
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 50px;
+  }
+  
+  .message-field-ctr {
+    width: 60%;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: flex-end;
+  }
+  
+  .message-time-ctr {
+    color: gray;
+    font-size: 12px;
+  }
+  
+  .message-btn-ctr {
+    width: 60%;
+    display: flex;
+    justify-content: space-between;
+    margin-top: 15px;
+  }
+
+  .right-aligned-btn-ctr {
+    display: flex;
+    justify-content: flex-end;
+  }
+  
+  .footer-btn.right-aligned-btn {
+    margin-left: 20px !important;
+    text-transform: none !important;
+  }
+  
+  .footer-btn.left-aligned-btn {
+    margin: 0 20px 0 0 !important;
+    text-transform: none !important;
+  }
+  
+  .footer-btn > span{
+    margin-left: 10px;
+  }
+  
+  .center-aligned-btn-ctr {
+    display: none;
+  }
+  
+  .save-btn {
+        background-color: #388e3c !important;
+  }
+  
+  .clear-btn {
+    color: #d32f2f !important;
+    border-color: #d32f2f !important;
+  }
+  
+  .previous-message-ctr {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      margin-top: 20px;
+      font-size: 15px;
+  }
+  
+  .previous-message-header-ctr {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-between;
+    width: 60%;
+    align-items: center;
+    font-size: 13px;
+    border-bottom: 1px solid #d9d8d8;
+    margin-bottom: 10px;
+  }
+  
+  .previous-message-label {
+    width: 200px;
+    margin: 0;
+  }
+  
+  .previous-message-content-ctr {
+    width: 60%;
+  }
+  
+  .previous-message-header-ctr svg {
+    color: gray;
+    font-size: 15px;
+    margin-right: 10px;
+  }
+  
+  .backdrop-ctr {
+    display: flex;
+    flex-flow: column;
+  }
+  
+  .loader-text {
+    color: #fff;
+    margin-top: 25px;
+  }
+  
+  /*
+    Altering material ui component font
+  */
+  
+  .message-field-ctr .MuiInputBase-input {
+    font-family: 'Montserrat', sans-serif;
+  }
+  
+  .message-field-ctr .MuiInputLabel-root {
+    font-family: 'Montserrat', sans-serif;
+  }
+  
+  .meesage-btn-ctr .MuiButtonBase-root {
+    font-family: 'Montserrat', sans-serif;
+  }
+  
+  .MuiPaper-root {
+    font-family: 'Montserrat', sans-serif !important;  
+  }
+  
+  @media (max-width: 500px){
+  
+    .footer-btn > span{
+      display: none;
+    } 
+  
+    .footer-btn.right-aligned-btn {
+      min-width: 35px !important;
+      width: auto;
+      margin-left: 0 !important;
+    }
+
+    .message-btn-ctr {
+      flex-direction: column;
+    }
+  
+    .right-aligned-btn-ctr {
+      justify-content: space-between;   
+    }
+
+    .left-aligned-btn-ctr {
+      display: none;
+    }
+
+    .center-aligned-btn-ctr {
+      display: block;
+      margin-top: 20px;
+    }
+
+    .center-aligned-btn {
+      width: 100%;
+    }
+    .center-aligned-btn > span{
+      display: block;
+    } 
+  }

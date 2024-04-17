@@ -1,0 +1,63 @@
+.notes-drawer-ctr {
+}
+
+.notes-list-ctr {
+    max-height: 95vh;
+    overflow: auto;
+}
+
+.notes-title {
+    padding: 8% 0 0 8%;
+    display: block;
+    font-size: large;
+    font-weight: 900;
+    color: #b1afaf;
+}
+
+.notes-list {
+    padding: 0 8% 0 12%;
+    list-style-type: none;
+}
+
+.note {
+    padding: 4%;
+    font-weight: 900;
+    border: 2px solid white;
+}
+
+.note:hover {
+    background-color: #EDF7ED;
+    color: #1E4620;
+    border-radius: 5px;
+    border-color: #1E4620;
+    cursor: pointer;
+}
+
+.selected-note {
+    background-color: #EDF7ED;
+    color: #1E4620;
+    border-radius: 5px;
+    border-color: white;
+}
+
+.add-new-note-btn {
+    position: fixed;
+    bottom: 0;
+    font-size: 18px;
+    width: 100%;
+    box-shadow: 0px 1px 5px #b1afaf;
+    display: flex;
+    justify-content: center;
+}
+
+.add-new-note-btn button {
+    font-size: 16px;
+    font-weight: 400;
+    display: flex;
+    justify-content: space-evenly;
+    padding: 10px 20px;
+}
+
+.add-new-note-btn-text {
+    color: #736e6e;
+}
