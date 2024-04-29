@@ -11,7 +11,7 @@ function App() {
       element: <Messages />
     },
     {
-      path: '/mask-test',
+      path: '/mask',
       element: <ComponentResolver />
     },
     {
