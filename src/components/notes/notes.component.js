@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import NotesDrawer from './drawer/drawer.component';
 import NotesEditor from './editor/editor.component';
-import { AppBar, IconButton, CssBaseline, Box, Snackbar, Alert } from '@mui/material';
+import { AppBar, IconButton, CssBaseline, Box, Snackbar, Alert, Skeleton  } from '@mui/material';
 import SegmentRoundedIcon from '@mui/icons-material/SegmentRounded';
-import { getAllNotes as getAllNotesService, getCurrentNote, saveNoteContent as saveNoteContentService, addNewNote as addNewNoteService } from '../../services/notes.service';
+import { getAllNotes as getAllNotesService, getCurrentNote, saveNoteContent as saveNoteContentService, addNewNote as addNewNoteService, deleteNote as deleteNoteService } from '../../services/notes.service';
 import './notes.component.css';
 
 const drawerWidth = 240;
@@ -14,6 +14,7 @@ function Notes() {
     const [isClosing, setIsClosing] = React.useState(false);
     const [notesList, setNotesList] = useState([]);
     const [currentNote, setCurrentNote] = useState({});
+    const [fetchingNote, setFetchingNote] = useState(false);
     const [open, setOpen] = useState(false);
 
     const handleDrawerClose = () => {
@@ -37,9 +38,11 @@ function Notes() {
 
       useEffect(() => {
         if(!currentNote._id) return;
+        setFetchingNote(true);
         getCurrentNote(currentNote._id)
           .then(note => {
             setCurrentNote(note.data);
+            setFetchingNote(false);
           })
       }, [currentNote._id]);
 
@@ -63,14 +66,40 @@ function Notes() {
 
       const addNewNote = (title) => {
         addNewNoteService(title).then((res) => {
-          console.log(res);
             if(res.status === 200) {
                 getAllNotes(false);
                 toastMessage = 'Note created successfully';
                 severity = 'success';
                 openToast();
+            } else {
+                toastMessage = 'Error creating note';
+                severity = 'error';
+                openToast();
             }
+        }).catch((err) => {
+            toastMessage = err?.response?.data || 'Error creating note';
+            severity = 'error';
+            openToast();
         })
+      }
+
+      const deleteNote = (noteId) => {
+        deleteNoteService(noteId).then((res) => {
+            if(res.status === 200) {
+                getAllNotes(true);
+                toastMessage = 'Note deleted successfully';
+                severity = 'success';
+                openToast();
+            } else {
+                toastMessage = 'Error deleting note';
+                severity = 'error';
+                openToast();
+            }
+        }).catch((err) => {
+          toastMessage = err?.response?.data || 'Error deleting note';
+          severity = 'error';
+          openToast();
+      })
       }
 
       const openToast = () => {
@@ -96,8 +125,24 @@ function Notes() {
         setCurrentNote,
         setNotesList,
         addNewNote,
+        deleteNote,
         container: document.body
       };
+
+      const renderEditor = () => {
+        const skeleton = () => (
+          <>
+            <Skeleton variant="rounded" sx={{width: '70%', height: '40px', margin: '20px'}} />
+            <Skeleton variant="rounded" sx={{width: '70%', height: '20px', margin: '20px'}}  />
+            <Skeleton variant="rounded" sx={{width: '70%', height: '40vh', margin: '20px'}}  />
+          </>
+        )
+
+        return fetchingNote 
+          ?  skeleton()
+          //: skeleton()
+          : <NotesEditor currentNote={currentNote} saveNoteContent={saveNoteContent}/>
+      }
 
       if(!currentNote || !currentNote.title) {
         return <div>Loading...</div>
@@ -147,7 +192,7 @@ function Notes() {
                         }}
                 >
                     <section className='notes-body'>
-                        {currentNote.content && <NotesEditor currentNote={currentNote} saveNoteContent={saveNoteContent}/>}
+                        {renderEditor()}
                     </section>
                 </Box>
             </Box>

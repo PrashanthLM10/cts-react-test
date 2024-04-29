@@ -15,6 +15,7 @@
 .MuiPaper-root.MuiAppBar-root {
     box-shadow: none;
     background: white;
+    max-height: 12%;
 }
 
 .note-title {

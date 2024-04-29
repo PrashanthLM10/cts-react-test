@@ -11,14 +11,6 @@ import { getMessage, saveMessage, checkServerStatus } from '../../services/messa
 import { useNavigate } from "react-router-dom";
 import './messages.component.css';
 
-function debounce(func, timeout = 500) {
-  let timer;
-  return (...args) => {
-    clearTimeout(timer);
-    timer = setTimeout(() => { func.apply(this, args); }, timeout);
-  };
-}
-
 let toastMessage = '';
 let severity = 'success';
 //let alertProps = {message: '', severity: 'success'};

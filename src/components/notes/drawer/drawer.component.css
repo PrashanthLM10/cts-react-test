@@ -23,6 +23,18 @@
     padding: 4%;
     font-weight: 900;
     border: 2px solid white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.note .note-btns-ctr {
+    display: none;
+}
+
+.note .note-btns-ctr button {
+    padding: 0;
+    color:#1E4620;
 }
 
 .note:hover {
@@ -31,6 +43,10 @@
     border-radius: 5px;
     border-color: #1E4620;
     cursor: pointer;
+}
+
+.note:hover .note-btns-ctr {
+    display: flex;
 }
 
 .selected-note {
@@ -60,4 +76,8 @@
 
 .add-new-note-btn-text {
     color: #736e6e;
+}
+
+.add-new-title-text-ctr .MuiFormControl-root.MuiTextField-root {
+    
 }

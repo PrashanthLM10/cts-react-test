@@ -1,17 +1,18 @@
 import axios from 'axios';
 
+let currentEnv = process.env.REACT_APP_API_URL;
+//currentEnv = process.env.NODE_ENV !== 'development' ? process.env.REACT_APP_API_URL : process.env.REACT_APP_LOCAL_API_URL;
+
 export const getMessage = () => {
-    return axios.get('https://cts-node-test.onrender.com/message/getMessage');
+    return axios.get(`${currentEnv}message/getMessage`);
     //return axios.get('http://localhost:3001/message/getMessage');
 }
 
 export const saveMessage = msg => {
     const postData = { message: msg };
-    return axios.post('https://cts-node-test.onrender.com/message/setMessage', postData);
-    // return axios.post('http://localhost:3001/message/setMessage', postData);
+    return axios.post(`${currentEnv}message/setMessage`, postData);
 }
 
 export const checkServerStatus = () => {
-    return axios.get('https://cts-node-test.onrender.com/');
-    //return axios.get('http://localhost:3001/');
+    return axios.get(`${currentEnv}`);
 }

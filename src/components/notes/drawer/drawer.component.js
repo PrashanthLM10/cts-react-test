@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Drawer, Box, Button, List, ListItem, ListItemText, Divider, Toolbar, IconButton, Tooltip, Menu, MenuItem, TextField } from '@mui/material';
 import PostAddTwoToneIcon from '@mui/icons-material/PostAddTwoTone';
 import DoneRoundedIcon from '@mui/icons-material/DoneRounded';
+import DeleteForeverTwoToneIcon from '@mui/icons-material/DeleteForeverTwoTone';
 import './drawer.component.css';
 
 function NotesDrawer(props) {
@@ -44,7 +45,7 @@ const { drawerWidth, handleDrawerClose, handleDrawerTransitionEnd, mobileOpen, s
 
 
 function NotesList(props) {
-    const { notesList, currentNote, setCurrentNote, setMobileOpen, addNewNote, drawerWidth} = props;
+    const { notesList, currentNote, setCurrentNote, setMobileOpen, addNewNote, drawerWidth, deleteNote} = props;
     const [anchorEl, setAnchorEl] = useState(null);
     const newNoteTitleRef= useRef(null);
     const open = Boolean(anchorEl);
@@ -68,7 +69,10 @@ function NotesList(props) {
                     key={note._id} 
                     onClick={() => {setCurrentNote(notesList[idx]); setMobileOpen(false)}} 
                     className={note._id === currentNote._id ? 'selected-note note': 'note'}>
-                        {note.title}
+                      <span>{note.title}</span>
+                      <section className='note-btns-ctr'>
+                        <IconButton size="small" onClick={() => deleteNote(note._id)}> <DeleteForeverTwoToneIcon /> </IconButton>
+                      </section>
                 </li>
             ))}
             </ul>
@@ -98,7 +102,7 @@ function NotesList(props) {
             >
               <MenuItem> 
                 <section className='add-new-title-text-ctr'>
-                   <TextField required placeholder='Enter title' inputRef={newNoteTitleRef}/> 
+                   <TextField required placeholder='Enter title' inputRef={newNoteTitleRef} size='small'/> 
                   <Button variant='contained' className='save-btn footer-btn right-aligned-btn' onClick={addNewNoteHandler}>
                     <DoneRoundedIcon />
                     <span>Add</span>

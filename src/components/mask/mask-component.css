@@ -1,0 +1,29 @@
+.mask-ctr {
+
+}
+
+.mask-ctr .article-title {
+    font-size: 36px;
+    font-family: "Titillium Web", Arial, sans-serif;
+    font-weight: 900;
+    line-height: 1;
+    text-transform: uppercase;
+    color: #011e41;
+    margin: 30px 0 20px;
+}
+
+.mask-ctr .top-bar img {
+    width: 100%;
+}
+
+.mask-ctr .mask-content {
+    margin: 10px 10%;
+}
+
+.mask-ctr .mask-content img {
+    width: 100%;
+}
+
+.mask-ctr .bottom-bar img {
+    width: 100%;
+}

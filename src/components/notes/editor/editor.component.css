@@ -2,8 +2,12 @@
     max-height: 70vh;
 }
 
-.editor .ck.ck-content.ck-editor__editable, .editor .ck.ck-reset.ck-editor, .editor .ck.ck-editor__main {
-    height: 100%;
+.editor .ck.ck-reset.ck-editor {
+    max-height: 70vh;
+}
+
+.editor .ck.ck-content.ck-editor__editable, .editor .ck.ck-editor__main {
+    height: 65vh;
 }
 
 .save-note-btn {

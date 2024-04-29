@@ -1,6 +1,7 @@
 import axios from "axios";
 
-const currentEnv = process.env.NODE_ENV !== 'development' ? process.env.REACT_APP_API_URL : process.env.REACT_APP_LOCAL_API_URL;
+// let currentEnv = process.env.REACT_APP_API_URL;
+let currentEnv = process.env.NODE_ENV !== 'development' ? process.env.REACT_APP_API_URL : process.env.REACT_APP_LOCAL_API_URL;
 
 export const getAllNotes = () => {
   try {
@@ -29,6 +30,14 @@ export const saveNoteContent = ({_id, content}) => {
 export const addNewNote = (title) => {
   try {
     return axios.post(`${currentEnv}notes/addNote`, {title});
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export const deleteNote = (_id) => {
+  try {
+    return axios.post(`${currentEnv}notes/deleteNote`, {_id});
   } catch (error) {
     console.error(error);
   }
