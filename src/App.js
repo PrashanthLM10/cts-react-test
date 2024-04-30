@@ -8,10 +8,6 @@ function App() {
   const router = createBrowserRouter([
     {
       path: '/',
-      element: <Messages />
-    },
-    {
-      path: '/mask',
       element: <ComponentResolver />
     },
     {
