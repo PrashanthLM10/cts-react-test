@@ -18,6 +18,19 @@
     margin-top: 50px;
   }
   
+  .device-info {
+    color: white;
+    font-size: small;
+    background-color: #9ab6e7;
+    padding: 10px;
+    font-weight: 800;
+  }
+
+  .device-info-value {
+    margin: 0 15px 0 10px;
+  }
+
+
   .message-field-ctr {
     width: 60%;
     display: flex;

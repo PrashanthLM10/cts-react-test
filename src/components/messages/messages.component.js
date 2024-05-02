@@ -20,6 +20,7 @@ const alertErrorMessage = `Server down. When accessed for the first time after b
 Please wait and DONT reload unless the server is not up for more than 5 minutes...`;
 
 function Messages() {
+  const [currentDeviceInfo, setCurrentDeviceInfo] = useState({hostname: '', machine:'', platform: ''});
   const [message, setMessage] = useState('');
   const [messageTime, setMessageTime] = useState('');
   const [prevMessageObj, setPrevMessage] = useState('');
@@ -58,8 +59,9 @@ function Messages() {
   const checkServer = () => {
     !showLoader && setShowLoader(true);
     checkServerStatus().then(res => {
-      if (res.status === 200 && res.data === 'working') {
+      if (res.status === 200) {
         if (!serverUp) setServerUp(true);
+        setCurrentDeviceInfo(res.data);
       }
     }).catch(e => {
       if (serverUp) setServerUp(false);
@@ -159,6 +161,14 @@ function Messages() {
         {prevMessageObj.message && <section className='previous-message-content-ctr'>{prevMessageObj.message}</section>}
       </section>
       <section className='message-ctr'>
+        {currentDeviceInfo.hostname && <p className='device-info'>
+            <span class="device-info-label">Host Name:</span>
+            <span class="device-info-value">{currentDeviceInfo.hostname} &nbsp;&nbsp;|</span>
+            <span class="device-info-label">Machine:</span>
+            <span class="device-info-value">{currentDeviceInfo.machine} &nbsp;&nbsp;|</span>
+            <span class="device-info-label">Platform:</span>
+            <span class="device-info-value">{currentDeviceInfo.platform} </span>
+          </p>}
         <section className='message-field-ctr'>
           {messageTime && <span class="message-time-ctr">{getTime(messageTime)}</span>}
           <TextField
