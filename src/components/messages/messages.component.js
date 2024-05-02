@@ -61,7 +61,7 @@ function Messages() {
     checkServerStatus().then(res => {
       if (res.status === 200) {
         if (!serverUp) setServerUp(true);
-        setCurrentDeviceInfo(res.data);
+        setCurrentDeviceInfo({...res.data, platform: navigator.userAgentData.platform, mobile: navigator.userAgentData.platform, brands: navigator.userAgentData.brands.reduce((a, c, idx) => a + `${idx === 0 ? ' ' : ', '}` + c.brand, '') });
       }
     }).catch(e => {
       if (serverUp) setServerUp(false);
@@ -167,7 +167,11 @@ function Messages() {
             <span class="device-info-label">Machine:</span>
             <span class="device-info-value">{currentDeviceInfo.machine} &nbsp;&nbsp;|</span>
             <span class="device-info-label">Platform:</span>
-            <span class="device-info-value">{currentDeviceInfo.platform} </span>
+            <span class="device-info-value">{currentDeviceInfo.platform} &nbsp;&nbsp;|</span>
+            <span class="device-info-label">Mobile:</span>
+            <span class="device-info-value">{currentDeviceInfo.mobile} &nbsp;&nbsp;|</span>
+            <span class="device-info-label">Brands:</span>
+            <span class="device-info-value">{currentDeviceInfo.brands}</span>
           </p>}
         <section className='message-field-ctr'>
           {messageTime && <span class="message-time-ctr">{getTime(messageTime)}</span>}
