@@ -29,7 +29,7 @@ function Messages() {
   //const [showAlert, setShowAlert] = useState(false);
   const [serverUp, setServerUp] = useState(false);
   const navigate = useNavigate();
-
+  console.log(navigator.userAgentData);
   useEffect(() => {
     if (serverUp) {
       getLatestMessage();
