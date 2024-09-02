@@ -1,10 +1,25 @@
-import React from "react";
+import React, { useState } from "react";
 import "./mask-component.css";
 import topBarImg from "../../assets/fa-top-bar.jpg";
 import contentImg from "../../assets/wembley-img.jpg";
 import footerImg from "../../assets/fa-footer-img.jpg";
+import { DialogContent, Slide, TextField, Dialog } from "@mui/material";
+
+const Transition = React.forwardRef(function Transition(
+  props,
+  ref,
+) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
 
 export default function Mask(props) {
+  const [ openPinDialog, setDialogVisibility ] = useState(false);
+  console.log(process.env.REACT_APP_SECRET_PIN);
+  const handleChange = e => {
+    const pin = process.env.REACT_APP_SECRET_PIN;
+    if(pin === e.target.value) props.setShowMessages(true)
+  }
+
   return (
     <section className="mask-ctr">
       <section className="top-bar">
@@ -24,7 +39,7 @@ export default function Mask(props) {
             <p>
               <strong>&nbsp;</strong>Our new plan aims to take the FA and
               English football forward with bold leadership and ambitious
-              targets to build on the progress of the past four <span onClick={() => props.setShowMessages(true)}>years</span>. 
+              targets to build on the progress of the past four <span onClick={() => setDialogVisibility(true)}>years</span>. 
             </p>
             <p>
               We cannot do it alone. Our vision remains to bring all parts of
@@ -104,6 +119,27 @@ export default function Mask(props) {
       <section className="bottom-bar">
         <img src={footerImg} alt="logo" />
       </section>
+      <Dialog
+        open={openPinDialog}
+        TransitionComponent={Transition}
+        onClose={(e) => setDialogVisibility(false)}
+        aria-describedby="alert-dialog-slide-description"
+      >
+        <DialogContent>
+          <TextField
+              autoFocus
+              required
+              margin="dense"
+              name="email"
+              id="name"
+              onChange={handleChange}
+              label="Email Address"
+              type="email"
+              fullWidth
+              variant="standard"
+            />
+        </DialogContent>
+      </Dialog>
     </section>
   );
 }
