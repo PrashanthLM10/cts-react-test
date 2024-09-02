@@ -20,6 +20,7 @@ export default function Mask(props) {
   }
 
   const showPinDialog = () => {
+    console.log(pin);
     if(!!pin) {
       setDialogVisibility(true);
     } else {
