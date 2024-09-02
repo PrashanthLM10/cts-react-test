@@ -14,7 +14,7 @@ const Transition = React.forwardRef(function Transition(
 
 export default function Mask(props) {
   const [ openPinDialog, setDialogVisibility ] = useState(false);
-  const pin = process.env.NODE_ENV === 'development' ? '' : process.env.SECRET_PIN;
+  const pin = process.env.NODE_ENV === 'development' ? '' : process.env.REACT_APP_SECRET_PIN;
   const handleChange = e => {
     if(pin === e.target.value) props.setShowMessages(true)
   }

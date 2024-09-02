@@ -5,7 +5,7 @@ import { debounce } from '../../utils/debounce';
 
 let setInactivityTimer = (tabInactiveHandler) => {
     const resetTimer = () => {
-    const inactiveTime = Number(process.env.INACTIVE_TIME_LIMIT || process.env.REACT_APP_INACTIVE_TIME_LIMIT)*1000
+    const inactiveTime = Number(process.env.REACT_APP_INACTIVE_TIME_LIMIT)*1000
       tabInactiveHandler(false);
       clearTimeout(time);
       time = setTimeout(() => tabInactiveHandler(true), inactiveTime)
