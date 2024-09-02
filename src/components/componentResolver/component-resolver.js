@@ -32,7 +32,7 @@ export default function ComponentResolver() {
     }, [isTabInactive])
     return(
         <>
-            {!showMessages && <Messages setShowMessages={setShowMessages}/>}
+            {!showMessages && <Mask setShowMessages={setShowMessages}/>}
             {showMessages && <Messages setShowMessages={setShowMessages}/>}
         </>
     )
