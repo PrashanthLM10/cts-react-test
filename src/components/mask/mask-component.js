@@ -14,10 +14,17 @@ const Transition = React.forwardRef(function Transition(
 
 export default function Mask(props) {
   const [ openPinDialog, setDialogVisibility ] = useState(false);
-  console.log(process.env.REACT_APP_SECRET_PIN);
+  const pin = process.env.NODE_ENV === 'development' ? '' : process.env.SECRET_PIN;
   const handleChange = e => {
-    const pin = process.env.REACT_APP_SECRET_PIN;
     if(pin === e.target.value) props.setShowMessages(true)
+  }
+
+  const showPinDialog = () => {
+    if(!!pin) {
+      setDialogVisibility(true);
+    } else {
+      props.setShowMessages(true);
+    }
   }
 
   return (
@@ -39,7 +46,7 @@ export default function Mask(props) {
             <p>
               <strong>&nbsp;</strong>Our new plan aims to take the FA and
               English football forward with bold leadership and ambitious
-              targets to build on the progress of the past four <span onClick={() => setDialogVisibility(true)}>years</span>. 
+              targets to build on the progress of the past four <span onClick={showPinDialog}>years</span>. 
             </p>
             <p>
               We cannot do it alone. Our vision remains to bring all parts of
