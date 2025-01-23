@@ -20,7 +20,6 @@ export default function Mask(props) {
   }
 
   const showPinDialog = () => {
-    console.log(pin);
     if(!!pin) {
       setDialogVisibility(true);
     } else {
@@ -143,7 +142,7 @@ export default function Mask(props) {
               id="name"
               onChange={handleChange}
               label="Email Address"
-              type="email"
+              type="password"
               fullWidth
               variant="standard"
             />
