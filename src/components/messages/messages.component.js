@@ -19,11 +19,11 @@ const alertErrorMessage = `Server down. When accessed for the first time after b
 Please wait and DONT reload unless the server is not up for more than 5 minutes...`;
 
 const encryptMessage = (msg) => {
-  return CryptoJS.AES.encrypt(msg, REACT_APP_PASSCODE).toString();
+  return CryptoJS.AES.encrypt(msg, process.env.REACT_APP_PASSCODE).toString();
 }
 
 const decryptMessage = (msg) => {
-  return CryptoJS.AES.decrypt(msg, REACT_APP_PASSCODE).toString(CryptoJS.enc.Utf8);
+  return CryptoJS.AES.decrypt(msg, process.env.REACT_APP_PASSCODE).toString(CryptoJS.enc.Utf8);
 }
 
 function Messages() {
