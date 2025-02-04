@@ -4,8 +4,9 @@ import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import DoneRoundedIcon from '@mui/icons-material/DoneRounded';
 import ClearRoundedIcon from '@mui/icons-material/ClearRounded';
 import CachedRoundedIcon from '@mui/icons-material/CachedRounded';
+import ClearAllRoundedIcon from '@mui/icons-material/ClearAllRounded';
+import ContentPasteRoundedIcon from '@mui/icons-material/ContentPasteRounded';
 import ContentCopyRoundedIcon from '@mui/icons-material/ContentCopyRounded';
-import CryptoJS from 'crypto-js';
 import { getMessage, saveMessage, checkServerStatus } from '../../services/message.service';
 import { useNavigate } from "react-router-dom";
 import './messages.component.css';
@@ -14,32 +15,26 @@ let toastMessage = '';
 let severity = 'success';
 //let alertProps = {message: '', severity: 'success'};
 let clearPollTimer;
-const alertSuccessMessage = 'Server running...';
+let clearAutoRefreshPollTimer;
+const alertSuccessMessage = <section><p style={{margin: 0}}>Server running...</p><p style={{margin: 0}}>Data auto-refreshes every 30 seconds.</p></section> ;
 const alertErrorMessage = `Server down. When accessed for the first time after being inactive for more than 15 minutes, it takes mostly 15s to start up. Polling every 5secs to check status. 
 Please wait and DONT reload unless the server is not up for more than 5 minutes...`;
-
-const encryptMessage = (msg) => {
-  return CryptoJS.AES.encrypt(msg, REACT_APP_PASSCODE).toString();
-}
-
-const decryptMessage = (msg) => {
-  return CryptoJS.AES.decrypt(msg, REACT_APP_PASSCODE).toString(CryptoJS.enc.Utf8);
-}
 
 function Messages() {
   const [currentDeviceInfo, setCurrentDeviceInfo] = useState({hostname: '', machine:'', platform: ''});
   const [message, setMessage] = useState('');
-  const [messageTime, setMessageTime] = useState('');
+  const [latestMessage, setLatestMessage] = useState('');
   const [prevMessageObj, setPrevMessage] = useState('');
   const [open, setOpen] = useState(false);
   const [showLoader, setShowLoader] = useState(false);
   //const [showAlert, setShowAlert] = useState(false);
   const [serverUp, setServerUp] = useState(false);
   const navigate = useNavigate();
-  console.log(navigator.userAgentData);
+  
   useEffect(() => {
     if (serverUp) {
       getLatestMessage();
+      setAutoRefresh();
 
       if (clearPollTimer) {
         clearInterval(clearPollTimer);
@@ -60,6 +55,7 @@ function Messages() {
 
     return () => {
       clearInterval(clearPollTimer);
+      clearInterval(clearAutoRefreshPollTimer);
     }
   }, [])
 
@@ -75,12 +71,14 @@ function Messages() {
     })
   }
 
+  const setAutoRefresh = () => {
+    if(clearAutoRefreshPollTimer) clearInterval(clearAutoRefreshPollTimer);
+    clearAutoRefreshPollTimer = setInterval(getLatestMessage, 30000);
+  }
   const getLatestMessage = () => {
-    !showLoader && setShowLoader(true);
     getMessage().then(res => {
-      setMessage(decryptMessage(res.data.message));
-      setMessageTime(res.data.time);
-      setPrevMessage({ message: decryptMessage(res.data.previousMessage), time: res.data.previousMessageTime });
+      setLatestMessage({ message: 'Test', time: res.data.time });
+      setPrevMessage({ message: 'test2', time: res.data.previousMessageTime });
       if (clearPollTimer) clearInterval(clearPollTimer);
       setShowLoader(false);
     }).catch(e => {
@@ -92,8 +90,7 @@ function Messages() {
   }
 
   const save = e => {
-    const encrytpedMessage = encryptMessage(message);
-    saveMessage(encrytpedMessage).then(res => {
+    saveMessage(message).then(res => {
       if (res.status === 200) {
         toastMessage = 'Save successful';
         severity = 'success';
@@ -103,6 +100,7 @@ function Messages() {
       }
       openToast();
       getLatestMessage();
+      clear();
     }).catch(e => {
       toastMessage = e.message;
       severity = "error";
@@ -156,36 +154,38 @@ function Messages() {
       <section className='top-bar'>
         {serverUp !== '' && <Alert sx={{ width: '55%' }} severity={serverUp ? 'success' : 'info'}>{serverUp ? alertSuccessMessage : alertErrorMessage}</Alert>}
       </section>
-      <section className='previous-message-ctr'>
-        <section className='previous-message-header-ctr'>
-          {prevMessageObj.message && <p className='previous-message-label'>Previous Message:</p>}
-          <span style={{ display: 'flex' }}>
-            <Tooltip title="8919368035" placement="left" arrow>
-              <InfoOutlinedIcon />
-            </Tooltip>
-            {prevMessageObj.time && <span class="message-time-ctr">{getTime(prevMessageObj.time)}</span>}
-          </span>
+      <section className='previous-message-ctr message-ctr'>
+        <section className='message-align-ctr'>
+          <section className='message-header-ctr'>
+            {prevMessageObj.message && <p className='message-label'>Previous:</p>}
+            <span style={{ display: 'flex' }}>
+              <Tooltip title="8919368035" placement="left" arrow>
+                <InfoOutlinedIcon />
+              </Tooltip>
+              {prevMessageObj.time && <span class="message-time-ctr">{getTime(prevMessageObj.time)}</span>}
+            </span>
+          </section>
+          {prevMessageObj.message && <section className='message-content-ctr'>{prevMessageObj.message}</section>}
         </section>
-        {prevMessageObj.message && <section className='previous-message-content-ctr'>{prevMessageObj.message}</section>}
+        
+      </section>
+      <section className='latest-message-ctr message-ctr'>
+        <section className='message-align-ctr'>
+          <section className='message-header-ctr'>
+            {latestMessage.message && <p className='message-label'>Latest:</p>}
+            <span style={{ display: 'flex' }}>
+              {latestMessage.time && <span class="message-time-ctr">{getTime(latestMessage.time)}</span>}
+            </span>
+          </section>
+          {latestMessage.message && <section className='latest-message-content-ctr'>{latestMessage.message}</section>}
+        </section>
       </section>
       <section className='message-ctr'>
-        {currentDeviceInfo.hostname && <p className='device-info'>
-            <span class="device-info-label">Host Name:</span>
-            <span class="device-info-value">{currentDeviceInfo.hostname} &nbsp;&nbsp;|</span>
-            <span class="device-info-label">Machine:</span>
-            <span class="device-info-value">{currentDeviceInfo.machine} &nbsp;&nbsp;|</span>
-            <span class="device-info-label">Platform:</span>
-            <span class="device-info-value">{currentDeviceInfo.platform} &nbsp;&nbsp;|</span>
-            <span class="device-info-label">Mobile:</span>
-            <span class="device-info-value">{currentDeviceInfo.mobile} &nbsp;&nbsp;|</span>
-            <span class="device-info-label">Brands:</span>
-            <span class="device-info-value">{currentDeviceInfo.brands}</span>
-          </p>}
+        
         <section className='message-field-ctr'>
-          {messageTime && <span class="message-time-ctr">{getTime(messageTime)}</span>}
           <TextField
             multiline
-            rows={10}
+            rows={7}
             fullWidth
             label="Message"
             placeholder="Tell me anything here"
@@ -202,7 +202,7 @@ function Messages() {
             </Button>
           </section>
           <section className='right-aligned-btn-ctr'>
-            <Button variant='outlined' className='refresh-btn footer-btn right-aligned-btn' onClick={getLatestMessage}>
+            <Button variant='outlined' className='refresh-btn footer-btn right-aligned-btn' onClick={() => {!showLoader && setShowLoader(true); getLatestMessage()}}>
               <CachedRoundedIcon />
               <span>Refresh</span>
             </Button>
