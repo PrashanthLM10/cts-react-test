@@ -1,0 +1,305 @@
+import './App.css';
+import { useState, useEffect, createContext } from 'react';
+import { TextField, Button } from '@mui/material';
+import SendIcon from '@mui/icons-material/Send';
+import { setID, sendMessage as sendMessageToSocket, getID, constructMessageObject, clearStorage } from './websocket-utils';
+import { MessagesPane } from './MessagesPane/messages-pane';
+
+let socket = null;
+export const MessagesContext = createContext([]);
+
+
+function App() {
+  const socketRetryInterval  = 5000;
+  const [isClosed, setIsClosed] = useState(true);
+  const [messages, setMessages] = useState([]);
+  const [inputText, setIpText] = useState('');
+
+  const retry = (fn, time) => {
+    
+  }
+  
+  const sendMessage = () => {
+    if(socket) {
+      const message = inputText;
+      sendMessageToSocket(socket, message);
+      setMessages(msgs => [...msgs, {...constructMessageObject(message), type:'message'}]);
+      setIpText('');
+    }
+  }
+
+  const establishSocketConnection = () => {
+    if( !socket || socket.readyState === WebSocket.CLOSED) {
+
+      const socketObj = new WebSocket('wss://cts-node-test.onrender.com');
+      socket = socketObj;
+
+      // socket opened
+      socket.addEventListener('open', e => { 
+        console.log('open', e);
+        setIsClosed(false);
+      });
+      
+      // message received
+      socket.addEventListener('message', (e) => {
+        const data = JSON.parse(e.data);
+        switch(data.type) {
+          //if setSocketID is true, it is to set the client id to this client in sessionStorage
+          case 'setSocketID':
+            setID(data.socketID);
+            break;
+          
+          // if new user joined, show a pill
+          case 'newClient':
+            setMessages(msgs => [...msgs, data]);
+            break;
+          
+          // if the data received is a message, update state which in-turn updates context 
+          case 'message':
+          default:
+            if(data.socketID !== getID()) {
+              setMessages(msgs => [...msgs, data]);
+            }
+            break;
+        }
+      });
+      
+
+      // socket error
+      socket.addEventListener('error', e => {
+        console.log('error',e, socket);
+        setTimeout(establishSocketConnection, socketRetryInterval);
+      });
+      
+
+      // socket closed
+      socket.addEventListener('close', e => { 
+        console.log('close', e.reason); 
+        socket = null;
+        clearStorage();
+        setTimeout(establishSocketConnection, socketRetryInterval);
+      });    
+    }
+  }
+
+  useEffect(() => {
+    isClosed && establishSocketConnection();
+  }, []);
+
+  const inputChange = e => {
+    if(e.code === 'Enter') {
+      sendMessage();
+      return;
+    }
+    setIpText(e.target.value);
+  }
+
+  return (
+    <div className="App">
+      <header className="App-header">
+          Chat
+      </header>
+        <MessagesContext.Provider value={messages}>
+          <MessagesPane />
+        </MessagesContext.Provider>
+      <section className='text-box'>
+      <TextField
+          className='text-area'
+          id="outlined-textarea"
+          placeholder="Enter text here"
+          multiline
+          fullWidth
+          rows={4}
+          value={inputText}
+          onChange={e => inputChange(e)}
+        />
+        <Button className='send-button' variant='contained' onClick={sendMessage}>
+          <SendIcon />
+          <span>Send</span>
+        </Button>
+      </section>
+    </div>
+  );
+}
+
+export default App;
+
+
+//App.css
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  height: 6vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+
+
+.text-box {
+  padding: 30px 15px;
+  display: flex;
+}
+
+.text-area {
+  margin-right: 25px !important;
+}
+
+.send-button {
+  width: 15%;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
+//MessagePane.js
+import { MessagesContext } from "../App";
+import { useContext, useState } from "react";
+import { Message } from "../Message/message";
+import './messages-pane.css';
+
+export const MessagesPane = (props) => {
+    const messages = useContext(MessagesContext);
+    return (
+        <section className='messages-pane-ctr'>
+            {messages.map(message => 
+                <Message {...message} key={message.time}/>
+            )}
+        </section>
+    )
+}
+
+//MessagePane.css
+.messages-pane-ctr {
+    /*background-color: #eceff1;*/
+    height: 75vh;
+    overflow-y: auto;
+}
+
+// Message.js
+import { getID } from "../websocket-utils";
+import './message.css';
+
+const currentClientID = getID();
+
+const MessageElement = ({currentClient, time, text}) => {
+    return (
+        <section className={`message-ctr ${currentClient ? 'own' : 'other'}`}>
+            <section className="message-content">
+                <span className='message-time'>{new Date(time).toLocaleString()}</span>
+                <span className='message-text'>{text}</span>
+            </section>
+        </section>     
+    )
+}
+
+const NewClientPill = ({socketID}) => {
+    return (
+        <section className='new-client-pill'><span className='pill-content'>{socketID} joined</span></section>
+    )
+}
+
+export const Message = ({socketID, text, time, type}) => {
+    const currentClient = socketID === currentClientID;
+    return (
+        currentClientID && (
+                type === 'message' 
+                    ?  <MessageElement {...{currentClient, text, time} }/>
+                    :  <NewClientPill socketID={socketID} />
+        )        
+    )
+}
+
+  //Message.css
+  .message-ctr {
+    display: flex;
+    justify-content: flex-start;
+}
+
+.message-ctr.own {
+    justify-content: flex-end;
+}
+
+.message-content {    
+    padding: 10px;
+    margin: 10px;
+    max-width: 75vw;
+    display: flex;
+    flex-flow: column;
+    max-width: 50vw;
+}
+
+.own .message-content {
+    background-color: #e1f5fe;
+    border: 1px solid #90caf9;
+    border-radius: 10px;
+    color: #01579b;
+    margin-right: 3%;
+}
+
+.other .message-content {
+    background-color: #e0f2f1;
+    border: 1px solid #80cbc4;
+    border-radius: 10px;
+    color: #004d40;
+    margin-left: 3%;
+}
+
+.message-time {
+    align-self: flex-end;
+    font-size: 10px;
+    color: gray;
+    margin-bottom: 5px;
+}
+
+.message-text {
+    word-wrap: break-word;
+}
+
+.own .message-text {
+    text-align: right;
+}
+
+.other .message-text {
+    text-align: left;
+}
+
+.pill-content {
+    background-color: #fff9c4;
+    padding: 7px;
+    border-radius: 10px;
+    font-size: 10px;
+    font-weight: 600;
+    margin: 15px;
+}
