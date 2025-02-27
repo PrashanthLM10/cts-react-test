@@ -81,6 +81,7 @@ function Messages() {
       setMessage(decryptMessage(res.data.message));
       setMessageTime(res.data.time);
       setPrevMessage({ message: decryptMessage(res.data.previousMessage), time: res.data.previousMessageTime });
+      setCurrentDeviceInfo({...currentDeviceInfo, userAgent: res.data.userAgent});
       if (clearPollTimer) clearInterval(clearPollTimer);
       setShowLoader(false);
     }).catch(e => {
@@ -180,6 +181,8 @@ function Messages() {
             <span class="device-info-value">{currentDeviceInfo.mobile} &nbsp;&nbsp;|</span>
             <span class="device-info-label">Brands:</span>
             <span class="device-info-value">{currentDeviceInfo.brands}</span>
+             <span class="device-info-label">UserAgent:</span>
+            <span class="device-info-value">{currentDeviceInfo.userAgent || ''}</span>
           </p>}
         <section className='message-field-ctr'>
           {messageTime && <span class="message-time-ctr">{getTime(messageTime)}</span>}
