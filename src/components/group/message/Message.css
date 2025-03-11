@@ -40,8 +40,15 @@
 .message-time {
     align-self: flex-end;
     font-size: 10px;
-    color: gray;
     margin-bottom: 5px;
+}
+
+.own .message-time {
+    color: white;
+}
+
+.own .message-time {
+    color: gray;
 }
 
 .message-text {
@@ -54,6 +61,10 @@
 
 .other .message-text {
     text-align: left;
+}
+
+.new-client-pill {
+    text-align: center;
 }
 
 .pill-content {
