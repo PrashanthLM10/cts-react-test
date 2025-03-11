@@ -15,14 +15,25 @@ const Transition = React.forwardRef(function Transition(
 export default function Mask(props) {
   const [ openPinDialog, setDialogVisibility ] = useState(false);
   const handleChange = e => {
-    if((process.env.NODE_ENV === 'development' ? '' : process.env.REACT_APP_SECRET_PIN) === e.target.value) props.setShowMessages(true)
+    switch(e.target.value) {
+      case process.env.REACT_APP_SECRET_PIN:
+        props.showMessages(true);
+        break;
+      
+      case process.env.REACT_APP_GROUP_PIN:
+        props.showGroup(true);
+        break;
+      
+      default:
+        console.error("Invalid Pin");
+    }
   }
 
   const showPinDialog = () => {
     if(!!(process.env.NODE_ENV === 'development' ? '' : process.env.REACT_APP_SECRET_PIN)) {
       setDialogVisibility(true);
     } else {
-      props.setShowMessages(true);
+      props.showGroup(true);
     }
   }
 

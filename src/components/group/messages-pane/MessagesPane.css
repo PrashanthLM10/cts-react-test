@@ -1,0 +1,5 @@
+.messages-pane-ctr {
+    /*background-color: #eceff1;*/
+    height: 75vh;
+    overflow-y: auto;
+}

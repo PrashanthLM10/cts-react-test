@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import Mask from '../mask/mask-component';
 import Messages from '../messages/messages.component';
+import Group from '../group/index';
 import { debounce } from '../../utils/debounce';
 
 let setInactivityTimer = (tabInactiveHandler) => {
@@ -19,21 +20,48 @@ let setInactivityTimer = (tabInactiveHandler) => {
     window.onkeydown = debouncedResetTimer; 
   };
 
+  const componentMatchString = {
+    mask: 'Mask',
+    messages: 'Messages',
+    group: 'Group'
+  }
+
 export default function ComponentResolver() {
     const [isTabInactive, setIsTabInactive] = useState(false);
     const tabInactiveHandler = (flag) => setIsTabInactive(flag);
-    const [showMessages, setShowMessages] = useState(false);
+    const [currentComponent, setComponent] = useState(componentMatchString.mask);
     setInactivityTimer(tabInactiveHandler);
     
     useEffect(() => {
         if(isTabInactive) {
-            setShowMessages(false);
+            showMask();
         }
     }, [isTabInactive])
+
+    const showMask = () => setComponent(componentMatchString.mask);
+    const showMessages = () => setComponent(componentMatchString.messages);
+    const showGroup = () => setComponent(componentMatchString.group);
+
+    const renderComponent = () => {
+        switch(currentComponent) {
+            
+            case componentMatchString.messages:
+                return <Messages showMessages={showMessages}/>           
+                break;
+                
+            case componentMatchString.group:
+                return <Group showGroup={showGroup} />
+                break;
+                
+            default:
+            case componentMatchString.mask:
+                return <Mask showMessages={showMessages} showGroup={showGroup}/>
+                break;
+        } 
+    }
     return(
         <>
-            {!showMessages && <Mask setShowMessages={setShowMessages}/>}
-            {showMessages && <Messages setShowMessages={setShowMessages}/>}
+            {renderComponent()}
         </>
     )
 }
