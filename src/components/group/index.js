@@ -1,4 +1,4 @@
-//import "./App.css";
+import "./group.css";
 import { useState, useEffect, createContext } from "react";
 import {
   setID,
@@ -107,14 +107,14 @@ function Group(props) {
   };
 
   return (
-    <div className="App">
-      <header className="App-header">Chat</header>
+    <div className="group-ctr">
+      <header className="group-header">Chat</header>
 
       <MessagesContext.Provider value={messages}>
         <MessagesPane />
       </MessagesContext.Provider>
 
-      <section className="text-box">
+      <section className="text-box-ctr">
         <textarea
           className="text-area"
           onKeyUp={(e) => inputChange(e)}
