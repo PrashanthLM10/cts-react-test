@@ -1,6 +1,7 @@
 import "./group.css";
 import { useState, useEffect, createContext } from "react";
 import { TextField, Button } from '@mui/material';
+import SendOutlinedIcon from '@mui/icons-material/SendOutlined';
 import {
   setID,
   sendMessage as sendMessageToSocket,
