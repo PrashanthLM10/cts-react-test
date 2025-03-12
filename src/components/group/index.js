@@ -1,5 +1,6 @@
 import "./group.css";
 import { useState, useEffect, createContext } from "react";
+import { TextField, Button } from '@mui/material';
 import {
   setID,
   sendMessage as sendMessageToSocket,
@@ -114,18 +115,21 @@ function Group(props) {
         <MessagesPane />
       </MessagesContext.Provider>
 
-      <section className="text-box-ctr">
-        <textarea
-          className="text-area"
-          onKeyUp={(e) => inputChange(e)}
+      <section className='text-box'>
+      <TextField
+          className='message-text-area'
+          id="outlined-textarea"
           placeholder="Enter text here"
-        >
-          {inputText}
-        </textarea>
-
-        <button className="button" onClick={sendMessage}>
-          Send Message
-        </button>
+          multiline
+          fullWidth
+          rows={1}
+          value={inputText}
+          onChange={e => inputChange(e)}
+          sx={{borderRadius: 4}}
+        />
+        <Button className='send-button' variant='contained' onClick={sendMessage}>
+          <SendOutlinedIcon />
+        </Button>
       </section>
     </div>
   );
