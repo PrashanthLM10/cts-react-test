@@ -126,9 +126,6 @@ function Group(props) {
           rows={1}
           value={inputText}
           onChange={ (e) => {inputChange(e)}
-          InputProps = {{
-            onKeyDown: (e) => {onKeyDown(e)}
-          }}
           sx={{borderRadius: 4}}
         />
         <Button className='send-button' variant='contained' onClick={sendMessage}>
