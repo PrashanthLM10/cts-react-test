@@ -13,16 +13,20 @@
 }
 
 .text-box {
-  padding: 30px 15px;
-  display: flex;
+    padding: 30px 15px;
+    display: flex;
+    background-color: #e8eaf6;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
 }
 
 .message-text-area {
-  margin-right: 25px !important;
+  margin-right: 15px !important;
 }
 
 .message-text-area .MuiInputBase-root {
-  border-radius: 16px;
+  border-radius: 24px;
+  background-color: white;
 }
 
 .message-text-area .MuiOutlinedInput-notchedOutline {
