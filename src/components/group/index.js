@@ -99,14 +99,14 @@ function Group(props) {
   }, []);
 
   const inputChange = (e) => {
-    if (e.code === "Enter") {
-      sendMessage();
-
-      return;
-    }
-
     setIpText(e.target.value);
   };
+
+  const onKeyDown = e => {
+    if (e.code === "Enter") {
+      sendMessage();
+    }
+  }
 
   return (
     <div className="group-ctr">
@@ -125,8 +125,9 @@ function Group(props) {
           fullWidth
           rows={1}
           value={inputText}
-          InputProps={{
-            onKeyDown: (e) => {inputChange(e)},
+          onChange={ (e) => {inputChange(e)}
+          InputProps = {{
+            onKeyDown: (e) => {onKeyDown(e)}
           }}
           sx={{borderRadius: 4}}
         />
