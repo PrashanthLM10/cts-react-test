@@ -106,7 +106,7 @@ function Group(props) {
   };
 
   const onKeyDown = e => {
-    if (e.code === "Enter") {
+    if (e.code === "Enter" && inputText.trim()) {
       sendMessage();
     }
   }
