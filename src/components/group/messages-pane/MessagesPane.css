@@ -3,6 +3,6 @@
     background-color: #e8eaf6;
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
-    height: calc(75vh - 10px);
+    height: calc(70vh - 10px);
     overflow-y: auto;
 }
