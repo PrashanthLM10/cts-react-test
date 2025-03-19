@@ -1,6 +1,7 @@
 .message-ctr {
     display: flex;
     justify-content: flex-start;
+    margin: 0;
 }
 
 .message-ctr.own {
