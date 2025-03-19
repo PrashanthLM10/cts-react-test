@@ -99,7 +99,10 @@ function Group(props) {
   }, []);
 
   const inputChange = (e) => {
-    setIpText(e.target.value);
+    const value = e.target.value.trim();
+    if(value) {
+      setIpText(value);
+    }
   };
 
   const onKeyDown = e => {
