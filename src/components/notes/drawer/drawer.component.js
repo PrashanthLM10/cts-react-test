@@ -27,7 +27,7 @@ const { drawerWidth, handleDrawerClose, handleDrawerTransitionEnd, mobileOpen, s
             '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
           }}
         >
-          <NotesList {...props}/>
+          <NotesList {...props} isMobile={true}/>
         </Drawer>
         <Drawer
           variant="permanent"
@@ -45,7 +45,7 @@ const { drawerWidth, handleDrawerClose, handleDrawerTransitionEnd, mobileOpen, s
 
 
 function NotesList(props) {
-    const { notesList, currentNote, setCurrentNote, setMobileOpen, addNewNote, drawerWidth, deleteNote} = props;
+    const { notesList, currentNote, setCurrentNote, setMobileOpen, addNewNote, drawerWidth, deleteNote, isMobile} = props;
     const [anchorEl, setAnchorEl] = useState(null);
     const newNoteTitleRef= useRef(null);
     const open = Boolean(anchorEl);
@@ -67,11 +67,11 @@ function NotesList(props) {
                 {notesList.map((note, idx) => (
                 <li 
                     key={note._id} 
-                    onClick={() => {setCurrentNote(notesList[idx]); setMobileOpen(false)}} 
+                    onClick={() => {if(currentNote._id !== note._id) {setCurrentNote(notesList[idx])}; setMobileOpen(false)}} 
                     className={note._id === currentNote._id ? 'selected-note note': 'note'}>
                       <span>{note.title}</span>
-                      <section className='note-btns-ctr'>
-                        <IconButton size="small" onClick={() => deleteNote(note._id)}> <DeleteForeverTwoToneIcon /> </IconButton>
+                      <section className={`note-btns-ctr ${isMobile ? 'mobile-view' : ''}`}>
+                        <IconButton size="small" onClick={(e) => {e.stopPropagation(); deleteNote(note._id);}}> <DeleteForeverTwoToneIcon /> </IconButton>
                       </section>
                 </li>
             ))}

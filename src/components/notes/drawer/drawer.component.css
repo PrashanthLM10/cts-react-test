@@ -30,6 +30,10 @@
 
 .note .note-btns-ctr {
     display: none;
+
+    &.mobile-view {
+        display: flex;
+    }
 }
 
 .note .note-btns-ctr button {
@@ -80,4 +84,11 @@
 
 .add-new-title-text-ctr .MuiFormControl-root.MuiTextField-root {
     
+}
+
+.add-new-title-text-ctr {
+    .save-btn {
+        margin-left: 15px !important;
+        height: 40px;
+    }
 }
