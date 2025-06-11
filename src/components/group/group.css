@@ -12,13 +12,28 @@
     font-size: 20px;
 }
 
-.text-box {
-    padding: 30px 15px;
-    display: flex;
+.group-content {
     background-color: #e8eaf6;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    display: flex;
+    flex-flow: column nowrap;
+    height: calc(100% - 100px);
+}
+
+.messages-pane {
+  flex: 9;
+  min-height: 100px;
+  overflow-y: auto;
+}
+
+.text-box {
+    margin: 30px 15px 20px;
+    display: flex;
     border-bottom-left-radius: 10px;
     border-bottom-right-radius: 10px;
-    max-height: calc(30vh - 150px);
+    min-height: 60px;
+    flex: 1;
 }
 
 .message-text-area {
