@@ -98,13 +98,22 @@ function Group(props) {
 
     // close the connection unmount
     return () => {
-      socket?.close();
+      reset();
+    };
+  }, []);
+
+  const reset = () => {
       setIsClosed(true);
       setMessages([]);
       setConnectionEstablished(false);
       setIpText("");
-    };
-  }, []);
+      clearStorage();
+      if (socket) {
+        socket.close();
+        socket = null;
+      }
+
+  }
 
   const inputChange = (e) => {
     const value = e.target.value;
