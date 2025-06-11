@@ -87,7 +87,7 @@ function Group(props) {
         clearStorage();
 
         setConnectionEstablished(false);
-        setID(null);
+        setID('');
         setTimeout(establishSocketConnection, socketRetryInterval);
       });
     }
