@@ -7,7 +7,7 @@ export const getID = () => {
 //set current client id to sessionStorage
 
 export const setID = (id) => {
-  if (!getID()) sessionStorage.setItem("socketID", id);
+  sessionStorage.setItem("socketID", id);
 };
 
 //clear SessionStorage
