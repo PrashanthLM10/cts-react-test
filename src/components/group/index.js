@@ -87,7 +87,7 @@ function Group(props) {
         clearStorage();
 
         setConnectionEstablished(false);
-        setID('');
+        setIsClosed(true);
         setTimeout(establishSocketConnection, socketRetryInterval);
       });
     }
@@ -99,6 +99,10 @@ function Group(props) {
     // close the connection unmount
     return () => {
       socket?.close();
+      setIsClosed(true);
+      setMessages([]);
+      setConnectionEstablished(false);
+      setIpText("");
     };
   }, []);
 
