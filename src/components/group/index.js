@@ -35,6 +35,7 @@ function Group(props) {
     }
   };
   const establishSocketConnection = () => {
+    if(socket) socket.close();
     if (!socket || socket.readyState === WebSocket.CLOSED) {
       const socketObj = new WebSocket("wss://cts-node-test.onrender.com");
       socket = socketObj;
@@ -70,7 +71,7 @@ function Group(props) {
       const socketErrorListener = (e) => (e) => {
         console.log("error", e, socket);
 
-        setTimeout(establishSocketConnection, socketRetryInterval);
+        setTimeout(() => {if(!connectionEstablished) establishSocketConnection()}, socketRetryInterval);
       };
 
 
@@ -93,10 +94,6 @@ function Group(props) {
         socket = null;
         setConnectionEstablished(false);
         setIsClosed(true);
-        setTimeout(() => {
-          // retry establishing connection
-          establishSocketConnection();
-        }, socketRetryInterval);
       });
     }
   };
@@ -111,15 +108,14 @@ function Group(props) {
   }, []);
 
   const reset = () => {
+    if (socket) {
+      socket.close();
+    }
       setIsClosed(true);
       setMessages([]);
       setConnectionEstablished(false);
       setIpText("");
       clearStorage();
-      if (socket) {
-        socket.close();
-        socket = null;
-      }
 
   }
 
