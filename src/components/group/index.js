@@ -39,13 +39,11 @@ function Group(props) {
       const socketObj = new WebSocket("wss://cts-node-test.onrender.com");
       socket = socketObj;
 
-      // socket opened
-      socket.addEventListener("open", (e) => {
+      const socketOpenListener = (e) => {
         setIsClosed(false);
-      });
+      }
 
-      // message received
-      socket.addEventListener("message", (e) => {
+      const socketMessageListener = (e) => {
         const data = JSON.parse(e.data);
         switch (data.type) {
           //if setSocketID is true, it is to set the client id to this client in sessionStorage
@@ -67,28 +65,38 @@ function Group(props) {
             }
             break;
         }
-      });
+      };
 
-      // socket error
-
-      socket.addEventListener("error", (e) => {
+      const socketErrorListener = (e) => (e) => {
         console.log("error", e, socket);
 
         setTimeout(establishSocketConnection, socketRetryInterval);
-      });
+      };
+
+
+      // socket opened
+      socket.addEventListener("open", socketOpenListener);
+
+      // message received
+      socket.addEventListener("message", socketMessageListener);
+
+      // socket error
+      socket.addEventListener("error", socketErrorListener);
 
       // socket closed
-
       socket.addEventListener("close", (e) => {
         console.log("close", e.reason);
-
-        socket = null;
-
         clearStorage();
-
+        socket.removeEventListener("open", socketOpenListener);
+        socket.removeEventListener("message", socketMessageListener);
+        socket.removeEventListener("error", socketErrorListener);
+        socket = null;
         setConnectionEstablished(false);
         setIsClosed(true);
-        setTimeout(establishSocketConnection, socketRetryInterval);
+        setTimeout(() => {
+          // retry establishing connection
+          establishSocketConnection();
+        }, socketRetryInterval);
       });
     }
   };
@@ -128,6 +136,7 @@ function Group(props) {
       sendMessage();
     }
   }
+
 
   return (
     <div className="group-ctr">

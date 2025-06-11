@@ -2,8 +2,6 @@ import { getID } from "../websocket-utils";
 
 import "./Message.css";
 
-const currentClientID = getID();
-
 const MessageElement = ({ currentClient, time, text }) => {
   return (
     <section className={`message-ctr ${currentClient ? "own" : "other"}`}>
@@ -25,6 +23,7 @@ const NewClientPill = ({ socketID }) => {
 };
 
 export const Message = ({ socketID, text, time, type }) => {
+  const currentClientID = getID();
   const currentClient = socketID === currentClientID;
 
   return (
