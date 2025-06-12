@@ -30,7 +30,7 @@ export default function ComponentResolver() {
     const [isTabInactive, setIsTabInactive] = useState(false);
     const tabInactiveHandler = (flag) => setIsTabInactive(flag);
     const [currentComponent, setComponent] = useState(componentMatchString.mask);
-    if(currentComponent === componentMatchString.messages) setInactivityTimer(tabInactiveHandler);
+    setInactivityTimer(tabInactiveHandler);
     
     useEffect(() => {
         if(isTabInactive) {
