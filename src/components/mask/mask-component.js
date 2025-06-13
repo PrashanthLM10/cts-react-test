@@ -5,37 +5,38 @@ import contentImg from "../../assets/wembley-img.jpg";
 import footerImg from "../../assets/fa-footer-img.jpg";
 import { DialogContent, Slide, TextField, Dialog } from "@mui/material";
 
-const Transition = React.forwardRef(function Transition(
-  props,
-  ref,
-) {
+const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
 export default function Mask(props) {
-  const [ openPinDialog, setDialogVisibility ] = useState(false);
-  const handleChange = e => {
-    switch(e.target.value) {
+  const [openPinDialog, setDialogVisibility] = useState(false);
+  const handleChange = (e) => {
+    switch (e.target.value) {
       case process.env.REACT_APP_SECRET_PIN:
         props.showMessages(true);
         break;
-      
+
       case process.env.REACT_APP_GROUP_PIN:
         props.showGroup(true);
         break;
-      
+
       default:
         console.error("Invalid Pin");
     }
-  }
+  };
 
   const showPinDialog = () => {
-    if(!!(process.env.NODE_ENV === 'development' ? '' : process.env.REACT_APP_SECRET_PIN)) {
+    if (
+      !!(process.env.NODE_ENV === "development"
+        ? ""
+        : process.env.REACT_APP_SECRET_PIN)
+    ) {
       setDialogVisibility(true);
     } else {
-      props.showGroup(true);
+      props.showMessages(true);
     }
-  }
+  };
 
   return (
     <section className="mask-ctr">
@@ -44,7 +45,7 @@ export default function Mask(props) {
       </section>
       <section className="mask-content">
         <h1 class="article-title">The FA Strategic Plan 2020-2024 </h1>
-        <img src= {contentImg} alt="logo" />
+        <img src={contentImg} alt="logo" />
         <section className="article-content">
           <div>
             <p>
@@ -56,7 +57,8 @@ export default function Mask(props) {
             <p>
               <strong>&nbsp;</strong>Our new plan aims to take the FA and
               English football forward with bold leadership and ambitious
-              targets to build on the progress of the past four <span onClick={showPinDialog}>years</span>. 
+              targets to build on the progress of the past four{" "}
+              <span onClick={showPinDialog}>years</span>. 
             </p>
             <p>
               We cannot do it alone. Our vision remains to bring all parts of
@@ -144,18 +146,18 @@ export default function Mask(props) {
       >
         <DialogContent>
           <TextField
-              autoFocus
-              autoComplete="off"
-              required
-              margin="dense"
-              name="email"
-              id="name"
-              onChange={handleChange}
-              label="Email Address"
-              type="password"
-              fullWidth
-              variant="standard"
-            />
+            autoFocus
+            autoComplete="off"
+            required
+            margin="dense"
+            name="email"
+            id="name"
+            onChange={handleChange}
+            label="Email Address"
+            type="password"
+            fullWidth
+            variant="standard"
+          />
         </DialogContent>
       </Dialog>
     </section>

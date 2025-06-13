@@ -1,1 +1,14 @@
+.messages-pane-ctr {
+  overflow-y: auto;
+  height: 100%;
+}
 
+.messages-pane-ctr * {
+  overflow-anchor: none;
+}
+
+.messages-pane-ctr > .anchor-element {
+  overflow-anchor: auto;
+  height: 1px;
+  width: 100%;
+}

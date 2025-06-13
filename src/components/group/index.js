@@ -35,8 +35,7 @@ function Group(props) {
     }
   };
   const establishSocketConnection = () => {
-    if(socket) socket.close();
-    if (!socket || socket.readyState === WebSocket.CLOSED) {
+     socket = null;
       const socketObj = new WebSocket("wss://cts-node-test.onrender.com");
       socket = socketObj;
 
@@ -91,7 +90,7 @@ function Group(props) {
         socket.removeEventListener("open", socketOpenListener);
         socket.removeEventListener("message", socketMessageListener);
         socket.removeEventListener("error", socketErrorListener);
-        socket = null;
+        //socket = null;
         setConnectionEstablished(false);
         setIsClosed(true);
       });
@@ -121,9 +120,7 @@ function Group(props) {
 
   const inputChange = (e) => {
     const value = e.target.value;
-    if(value) {
-      setIpText(value);
-    }
+    setIpText(value);
   };
 
   const onKeyDown = e => {
@@ -139,7 +136,7 @@ function Group(props) {
       <header className="group-header">Chat</header>
 
       <section className="group-content">  
-        <section className="messages-pane"> 
+        <section className="messages-pane" > 
           <MessagesContext.Provider value={messages}>
             <MessagesPane />
           </MessagesContext.Provider>

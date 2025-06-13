@@ -24,7 +24,6 @@
 .messages-pane {
   flex: 9;
   min-height: 100px;
-  overflow-y: auto;
 }
 
 .text-box {

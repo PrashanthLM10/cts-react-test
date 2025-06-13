@@ -1,7 +1,7 @@
 import axios from "axios";
 
-// let currentEnv = process.env.REACT_APP_API_URL;
-let currentEnv = process.env.NODE_ENV !== 'development' ? process.env.REACT_APP_API_URL : process.env.REACT_APP_LOCAL_API_URL;
+ let currentEnv = process.env.REACT_APP_API_URL;
+//let currentEnv = process.env.NODE_ENV !== 'development' ? process.env.REACT_APP_API_URL : process.env.REACT_APP_LOCAL_API_URL;
 
 export const getAllNotes = () => {
   try {
