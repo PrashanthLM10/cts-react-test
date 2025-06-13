@@ -19,6 +19,7 @@ import {
   getMessage,
   saveMessage,
   checkServerStatus,
+  updateLatestMessage,
 } from "../../services/message.service";
 import { useNavigate } from "react-router-dom";
 import "./messages.component.css";
@@ -155,6 +156,27 @@ function Messages({ tabInactiveHandler }) {
       });
   };
 
+  const update = (e) => {
+    const encrytpedMessage = encryptMessage(message);
+    updateLatestMessage(encrytpedMessage)
+      .then((res) => {
+        if (res.status === 200) {
+          toastMessage = "Update successful";
+          severity = "success";
+        } else {
+          toastMessage = "Couldn't update";
+          severity = "error";
+        }
+        openToast();
+        getLatestMessage();
+      })
+      .catch((e) => {
+        toastMessage = e.message;
+        severity = "error";
+        openToast();
+      });
+  };
+
   const clear = () => {
     setMessage("");
     //save();
@@ -241,7 +263,7 @@ function Messages({ tabInactiveHandler }) {
       </section>
       <section className="message-ctr">
         <section className="manifest-message">
-          {process.env.REACT_APP_MANIFESTATION || "Breathtaking. Nothing less."}
+          {process.env.REACT_APP_MANIFESTATION}
         </section>
         <section className="message-field-ctr">
           {messageTime && (
@@ -288,7 +310,7 @@ function Messages({ tabInactiveHandler }) {
             <Button
               variant="outlined"
               className="update-btn footer-btn right-aligned-btn"
-              onClick={clear}
+              onClick={update}
             >
               <UploadOutlinedIcon />
               <span>Update</span>
