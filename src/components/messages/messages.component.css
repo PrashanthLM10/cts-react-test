@@ -17,16 +17,16 @@
   margin-top: 50px;
 }
 
-.device-info {
+.manifest-message {
   color: white;
   font-size: small;
   background-color: #9ab6e7;
   padding: 10px;
   font-weight: 800;
-}
-
-.device-info-value {
-  margin: 0 15px 0 10px;
+  width: 100%;
+  font-size: 32px;
+  text-align: center;
+  margin: 25px;
 }
 
 .message-field-ctr {
@@ -111,6 +111,10 @@
 
 .previous-message-content-ctr {
   width: 60%;
+}
+
+.previous-message-placeholder {
+  color: #757575;
 }
 
 .previous-message-header-ctr svg {
