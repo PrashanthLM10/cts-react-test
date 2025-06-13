@@ -1,7 +1,7 @@
 import "./group.css";
 import { useState, useEffect, createContext } from "react";
-import { TextField, Button } from '@mui/material';
-import SendOutlinedIcon from '@mui/icons-material/SendOutlined';
+import { TextField, Button } from "@mui/material";
+import SendOutlinedIcon from "@mui/icons-material/SendOutlined";
 import {
   setID,
   sendMessage as sendMessageToSocket,
@@ -23,7 +23,7 @@ function Group(props) {
 
   const retry = (fn, time) => {};
 
-  const sendMessage = () => { 
+  const sendMessage = () => {
     if (socket) {
       const message = inputText;
       sendMessageToSocket(socket, message);
@@ -35,66 +35,66 @@ function Group(props) {
     }
   };
   const establishSocketConnection = () => {
-     socket = null;
-      const socketObj = new WebSocket("wss://cts-node-test.onrender.com");
-      socket = socketObj;
+    socket = null;
+    const socketObj = new WebSocket("wss://cts-node-test.onrender.com");
+    socket = socketObj;
 
-      const socketOpenListener = (e) => {
-        setIsClosed(false);
-      }
+    const socketOpenListener = (e) => {
+      setIsClosed(false);
+    };
 
-      const socketMessageListener = (e) => {
-        const data = JSON.parse(e.data);
-        switch (data.type) {
-          //if setSocketID is true, it is to set the client id to this client in sessionStorage
-          case "setSocketID":
-            setID(data.socketID);
-            setConnectionEstablished(true);
-            break;
+    const socketMessageListener = (e) => {
+      const data = JSON.parse(e.data);
+      switch (data.type) {
+        //if setSocketID is true, it is to set the client id to this client in sessionStorage
+        case "setSocketID":
+          setID(data.socketID);
+          setConnectionEstablished(true);
+          break;
 
-          // if new user joined, show a pill
-          case "newClient":
+        // if new user joined, show a pill
+        case "newClient":
+          setMessages((msgs) => [...msgs, data]);
+          break;
+
+        // if the data received is a message, update state which in-turn updates context
+        case "message":
+        default:
+          if (data.socketID !== getID()) {
             setMessages((msgs) => [...msgs, data]);
-            break;
+          }
+          break;
+      }
+    };
 
-          // if the data received is a message, update state which in-turn updates context
-          case "message":
-          default:
-            if (data.socketID !== getID()) {
-              setMessages((msgs) => [...msgs, data]);
-            }
-            break;
-        }
-      };
+    const socketErrorListener = (e) => (e) => {
+      console.log("error", e, socket);
 
-      const socketErrorListener = (e) => (e) => {
-        console.log("error", e, socket);
+      setTimeout(() => {
+        if (!connectionEstablished) establishSocketConnection();
+      }, socketRetryInterval);
+    };
 
-        setTimeout(() => {if(!connectionEstablished) establishSocketConnection()}, socketRetryInterval);
-      };
+    // socket opened
+    socket.addEventListener("open", socketOpenListener);
 
+    // message received
+    socket.addEventListener("message", socketMessageListener);
 
-      // socket opened
-      socket.addEventListener("open", socketOpenListener);
+    // socket error
+    socket.addEventListener("error", socketErrorListener);
 
-      // message received
-      socket.addEventListener("message", socketMessageListener);
-
-      // socket error
-      socket.addEventListener("error", socketErrorListener);
-
-      // socket closed
-      socket.addEventListener("close", (e) => {
-        console.log("close", e.reason);
-        clearStorage();
-        socket.removeEventListener("open", socketOpenListener);
-        socket.removeEventListener("message", socketMessageListener);
-        socket.removeEventListener("error", socketErrorListener);
-        //socket = null;
-        setConnectionEstablished(false);
-        setIsClosed(true);
-      });
-    }
+    // socket closed
+    socket.addEventListener("close", (e) => {
+      console.log("close", e.reason);
+      clearStorage();
+      socket.removeEventListener("open", socketOpenListener);
+      socket.removeEventListener("message", socketMessageListener);
+      socket.removeEventListener("error", socketErrorListener);
+      //socket = null;
+      setConnectionEstablished(false);
+      setIsClosed(true);
+    });
   };
 
   useEffect(() => {
@@ -110,55 +110,63 @@ function Group(props) {
     if (socket) {
       socket.close();
     }
-      setIsClosed(true);
-      setMessages([]);
-      setConnectionEstablished(false);
-      setIpText("");
-      clearStorage();
-
-  }
+    setIsClosed(true);
+    setMessages([]);
+    setConnectionEstablished(false);
+    setIpText("");
+    clearStorage();
+  };
 
   const inputChange = (e) => {
     const value = e.target.value;
     setIpText(value);
   };
 
-  const onKeyDown = e => {
+  const onKeyDown = (e) => {
     if (e.code === "Enter" && inputText) {
       e.preventDefault();
       sendMessage();
     }
-  }
-
+  };
 
   return (
     <div className="group-ctr">
       <header className="group-header">Chat</header>
 
-      <section className="group-content">  
-        <section className="messages-pane" > 
+      <section className="group-content">
+        <section className="messages-pane">
           <MessagesContext.Provider value={messages}>
             <MessagesPane />
           </MessagesContext.Provider>
-        </section>   
+        </section>
 
-        <section className='text-box'>
-        <TextField
-            className='message-text-area'
+        <section className="text-box">
+          <TextField
+            className="message-text-area"
             id="outlined-textarea"
-            placeholder={ connectionEstablished ? "Enter text here" : "Please wait for connection..."}
+            placeholder={
+              connectionEstablished
+                ? "Enter text here"
+                : "Please wait for connection..."
+            }
             multiline
             fullWidth
             rows={1}
             value={inputText}
             disabled={!connectionEstablished}
-            onChange={ (e) => inputChange(e)}
+            onChange={(e) => inputChange(e)}
             InputProps={{
-              onKeyDown: (e) => {onKeyDown(e)},
+              onKeyDown: (e) => {
+                onKeyDown(e);
+              },
             }}
-            sx={{borderRadius: 4}}
+            sx={{ borderRadius: 4 }}
           />
-          <Button className='send-button' variant='contained' onClick={sendMessage}>
+          <Button
+            className="send-button"
+            variant="contained"
+            onClick={sendMessage}
+          >
             <SendOutlinedIcon />
           </Button>
         </section>
