@@ -21,7 +21,7 @@
   color: white;
   font-size: small;
   background-color: #9ab6e7;
-  padding: 10px;
+  padding: 10px 0;
   font-weight: 800;
   width: 100%;
   font-size: 32px;
@@ -174,7 +174,7 @@
 
   .center-aligned-btn-ctr {
     display: block;
-    margin-top: 20px;
+    margin: 20px 0;
   }
 
   .center-aligned-btn {
