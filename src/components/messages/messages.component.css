@@ -190,3 +190,9 @@
     display: none;
   }
 }
+
+@media (max-width: 500px) {
+  .right-aligned-btn {
+    flex-grow: 1;
+  }
+}
