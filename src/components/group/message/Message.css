@@ -16,8 +16,8 @@
 
 
 .message-content {
-    padding: 10px 20px;
-    margin: 10px;
+    padding: 5px 10px 7px;
+    margin: 5px 10px;
     max-width: 75vw;
     display: flex;
     flex-flow: column;
@@ -46,10 +46,6 @@
 
 .own .message-time {
     color: white;
-}
-
-.own .message-time {
-    color: gray;
 }
 
 .message-text {
