@@ -6,7 +6,7 @@ const MessageElement = ({ currentClient, time, text }) => {
   return (
     <section className={`message-ctr ${currentClient ? "own" : "other"}`}>
       <section className="message-content">
-        <span className="message-time">{new Date(time).toLocaleString()}</span>
+        <span className="message-time">{new Date(time).toLocaleTimeString()}</span>
 
         <span className="message-text">{text}</span>
       </section>
