@@ -208,7 +208,7 @@ function Messages({ tabInactiveHandler }) {
 
   const resetInactivityTimer = () => {
     if (countDownRef && countDownRef.current) {
-      countDownRef.current.resetTimer();
+      countDownRef.current.stopTimer();
     }
   };
 

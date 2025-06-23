@@ -1,59 +1,73 @@
-import { forwardRef, useEffect, useState, useImperativeHandle } from "react";
+import { forwardRef, useEffect, useState, useImperativeHandle, useCallback } from "react";
 import { debounce } from "../../utils/debounce";
 import SkipPreviousIcon from "@mui/icons-material/SkipPrevious";
 import { Button } from "@mui/material";
 import "./count-down.component.css";
 
-let interval = null;
+let intervalWorker = null;
 export const CountDown = forwardRef(
   ({ inactiveTime, inactivityHandler }, ref) => {
     const [timeLeft, setTimeLeft] = useState(inactiveTime);
+    const workerMessageHandler = useCallback((e) => {
+        if (e.data <= 0) {
+          stopTimer();
+          inactivityHandler();
+        }
+        setTimeLeft(() => {
+          console.log(e.data);
+          return e.data;
+        });
+      })
 
     const startTimer = (messageContainerRef = false) => {
       // If addListeners is true, add event listeners to reset the timer
       if (messageContainerRef) addListenersToResetTimer(messageContainerRef);
-      if (interval) clearInterval(interval);
       setTimeLeft(inactiveTime);
-      // Start the countdown timer
-      interval = setInterval(() => {
-        setTimeLeft((prevTime) => {
-          if (prevTime <= 0) {
-            clearInterval(interval);
-            inactivityHandler();
-            return 0;
-          }
 
-          prevTime -= 1;
-          return prevTime;
-        });
-      }, 1000);
+      // Start the countdown timer through worker
+      if (intervalWorker) {
+        intervalWorker.terminate();
+      }
+      intervalWorker = new Worker(
+        new URL("./count-down.worker.js", import.meta.url)
+      );
+      intervalWorker.onmessage = workerMessageHandler;
+      intervalWorker.postMessage({ type: "start", value: inactiveTime });
     };
 
     const resetTimer = () => {
-      startTimer();
+      if(intervalWorker) intervalWorker.postMessage({ type: "start", value: inactiveTime });
+    };
+
+    const stopTimer = () => {
+      setTimeLeft(0);
+      if (intervalWorker) {
+        intervalWorker.postMessage("stop");
+        intervalWorker.terminate();
+      } 
     };
 
     const addListenersToResetTimer = (messageContainerRef) => {
-      const debouncedResetTimer = debounce(resetTimer, 20_000);
+      const debouncedResetTimer = debounce(resetTimer, 10_000);
 
       messageContainerRef.ontouchstart = debouncedResetTimer;
       messageContainerRef.onclick = debouncedResetTimer;
       messageContainerRef.onkeydown = debouncedResetTimer;
     };
 
-    /* useEffect(() => {
-      startTimer();
+    useEffect(() => {
       return () => {
-        clearInterval(interval);
+        stopTimer();
+        if (intervalWorker) intervalWorker.terminate();
       };
-    }, []); */
+    }, []);
 
     useImperativeHandle(ref, () => {
-      return { resetTimer, startTimer };
+      return { resetTimer, startTimer, stopTimer };
     });
 
     const naviagteBackToMask = () => {
-      clearInterval(interval);
+      stopTimer();
       inactivityHandler();
     };
 
