@@ -48,7 +48,7 @@ export const CountDown = forwardRef(
     };
 
     const addListenersToResetTimer = (messageContainerRef) => {
-      const debouncedResetTimer = debounce(resetTimer, 10_000);
+      const debouncedResetTimer = debounce(resetTimer, process.env?.REACT_APP_INACTIVE_DEBOUUNCE_TIME || 10_000);
 
       messageContainerRef.ontouchstart = debouncedResetTimer;
       messageContainerRef.onclick = debouncedResetTimer;
