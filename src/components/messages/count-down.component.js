@@ -4,47 +4,81 @@ import SkipPreviousIcon from "@mui/icons-material/SkipPrevious";
 import { Button } from "@mui/material";
 import "./count-down.component.css";
 
-let intervalWorker = null;
+/** Worker Code - For reference */
+//let intervalWorker = null;
+
+const inactiveTime_backup = 300;
+let interval = null;
+let lastActiveTime = Date.now();
 export const CountDown = forwardRef(
   ({ inactiveTime, inactivityHandler }, ref) => {
     const [timeLeft, setTimeLeft] = useState(inactiveTime);
-    const workerMessageHandler = useCallback((e) => {
-        if (e.data <= 0) {
-          stopTimer();
-          inactivityHandler();
-        }
-        setTimeLeft(() => {
-          console.log(e.data);
-          return e.data;
-        });
-      })
+    inactiveTime = inactiveTime || inactiveTime_backup;
+
+    useEffect(() => {
+      if(timeLeft <= 0) {
+        inactivityHandler();
+        if(interval) clearInterval(interval);
+      }
+    }, [timeLeft]);
+
+    /** Worker Code - For reference */
+    /* const workerMessageHandler = useCallback((e) => {
+        const elapsedTime = e.data;
+        const timeLeft = Math.floor((inactiveTime*1000 - elapsedTime)/1000);
+        setTimeLeft(timeLeft);
+    }); */
+
+    const intervalHandler = useCallback(() => {
+        const elapsedTime = Date.now() - lastActiveTime;
+        const timeLeft = Math.floor((inactiveTime*1000 - elapsedTime)/1000);
+        console.log(timeLeft);
+        setTimeLeft(timeLeft);
+    });
+
+    const runInterval = () => {
+      // Start Interval to calculate elapsed Time
+      if(interval) clearInterval(interval);
+      lastActiveTime = Date.now();
+      interval = setInterval(intervalHandler, 1000);
+      console.log('run',interval);
+    }
 
     const startTimer = (messageContainerRef = false) => {
       // If addListeners is true, add event listeners to reset the timer
       if (messageContainerRef) addListenersToResetTimer(messageContainerRef);
-      setTimeLeft(inactiveTime);
-
+      runInterval();
+      
+      /** Worker Code - For reference */
       // Start the countdown timer through worker
-      if (intervalWorker) {
+      /* if (intervalWorker) {
         intervalWorker.terminate();
       }
       intervalWorker = new Worker(
         new URL("./count-down.worker.js", import.meta.url)
       );
       intervalWorker.onmessage = workerMessageHandler;
-      intervalWorker.postMessage({ type: "start", value: inactiveTime });
+      intervalWorker.postMessage({ type: "start", value: timeNow }); */
+
+      
     };
 
     const resetTimer = () => {
-      if(intervalWorker) intervalWorker.postMessage({ type: "start", value: inactiveTime });
+      /** Worker Code - For reference */
+      //if(intervalWorker) intervalWorker.postMessage({ type: "start", value: Date.now() });
+
+      runInterval();
     };
 
     const stopTimer = () => {
-      setTimeLeft(0);
-      if (intervalWorker) {
+      if(timeLeft > 0 ) setTimeLeft(0);
+
+      
+      /** Worker Code - For reference */
+      /* if (intervalWorker) {
         intervalWorker.postMessage("stop");
         intervalWorker.terminate();
-      } 
+      } */ 
     };
 
     const addListenersToResetTimer = (messageContainerRef) => {
@@ -55,20 +89,15 @@ export const CountDown = forwardRef(
       messageContainerRef.onkeydown = debouncedResetTimer;
     };
 
-    useEffect(() => {
-      return () => {
-        stopTimer();
-        if (intervalWorker) intervalWorker.terminate();
-      };
-    }, []);
-
     useImperativeHandle(ref, () => {
       return { resetTimer, startTimer, stopTimer };
     });
 
-    const naviagteBackToMask = () => {
+    const naviagteBackToMask = (e) => {
+      e.stopPropagation();      
+      if(interval) clearInterval(interval);
+      interval = null;
       stopTimer();
-      inactivityHandler();
     };
 
     const showInMinutes = (seconds) => {
@@ -87,7 +116,10 @@ export const CountDown = forwardRef(
           variant="contained"
           className="back-button"
           color="primary"
-          onClick={naviagteBackToMask}
+          // click capture event will be called during capture phase, so we can cancel all events called in bubble phase
+          // we need this because we have registerd click handler on the entire messages element 
+          // and we don't need that to be called when this button is clicked, becuase this button will navigate back to mask
+          onClickCapture={e => naviagteBackToMask(e)}
           size="small"
         >
           <SkipPreviousIcon fontSize="medium" />

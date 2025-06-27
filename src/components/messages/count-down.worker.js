@@ -3,8 +3,7 @@ let timeLeft = 300;
 onmessage = (e) => {
   switch (e.data.type) {
     case "start":
-      timeLeft = e.data.value;
-      startTimer();
+      startTimer(e.data.value);
       break;
     case "stop":
     default:
@@ -12,24 +11,11 @@ onmessage = (e) => {
   }
 };
 
-const startTimer = () => {
+const startTimer = (lastActiveTime) => {
   if (interval) clearInterval(interval);
   // Start the countdown timer
   interval = setInterval(() => {
-    if (timeLeft <= 0) {
-        clearInterval(interval);
-        timeLeft =  0;
-    } else {
-        timeLeft -= 1
-    }
-    postMessage(timeLeft);
+    const elapsedTime = Date.now() - lastActiveTime;
+    postMessage(elapsedTime);
   }, 1000);
 };
-
-
-
-/* (prevTime) => {
-          
-          console.log('---', prevTime);
-          return prevTime;
-        } */
