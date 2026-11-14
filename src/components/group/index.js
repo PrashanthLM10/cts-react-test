@@ -36,7 +36,7 @@ function Group(props) {
   };
   const establishSocketConnection = () => {
     socket = null;
-    const socketObj = new WebSocket("wss://cts-node-test.onrender.com");
+    const socketObj = new WebSocket(process.env.REACT_APP_WS_URL);
     socket = socketObj;
 
     const socketOpenListener = (e) => {
